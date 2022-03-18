@@ -21,14 +21,13 @@ import com.example.lesson41.databinding.FragmentProfileBinding;
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
-    private ActivityResultLauncher<String>  addImage;
-
+    private ActivityResultLauncher<String> addImage;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding=FragmentProfileBinding.inflate(inflater,container,false);
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
 
@@ -46,11 +45,11 @@ public class ProfileFragment extends Fragment {
                     }
                 }
         );
-        binding.ivForgallery    .setOnClickListener(new View.OnClickListener() {
+        binding.ivForgallery.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                addImage  .launch("image/*");
+                addImage.launch("image/*");
 
             }
         });

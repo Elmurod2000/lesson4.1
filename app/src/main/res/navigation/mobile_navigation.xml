@@ -27,4 +27,9 @@
         android:name="com.example.lesson41.ui.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/newsFragment"
+        android:name="com.example.lesson41.ui.home.NewsFragment"
+        android:label="fragment_news"
+        tools:layout="@layout/fragment_news" />
 </navigation>
