@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+import com.example.lesson41.Prefs;
 import com.example.lesson41.R;
 import com.example.lesson41.databinding.FragmentProfileBinding;
 
@@ -21,8 +23,7 @@ import com.example.lesson41.databinding.FragmentProfileBinding;
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
-    private ActivityResultLauncher<String> addImage;
-
+    private Prefs prefs;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,22 +37,28 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        addImage = registerForActivityResult(
-                new ActivityResultContracts.GetContent(),
-                new ActivityResultCallback<Uri>() {
-                    @Override
-                    public void onActivityResult(Uri result) {
-                        binding.ivForgallery.setImageURI(result);
-                    }
+        prefs = new Prefs(view.getContext());
+        binding.ivForgallery.setOnClickListener(view1 ->
+                resultLauncher.launch("image/*"));
+        binding.etSave.setText(prefs.getName());
+        if(prefs.getImage()!=null){
+            Glide.with(binding.ivForgallery).load(prefs.getImage()).into(binding.ivForgallery);
+        }
+    }
+
+
+    ActivityResultLauncher<String> resultLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(),
+            new ActivityResultCallback<Uri>() {
+                @Override
+                public void onActivityResult(Uri result) {
+                    Glide.with(binding.ivForgallery).load(result).into(binding.ivForgallery);
+                    prefs.saveImage(String.valueOf(result));
                 }
-        );
-        binding.ivForgallery.setOnClickListener(new View.OnClickListener() {
+            });
 
-            @Override
-            public void onClick(View view) {
-                addImage.launch("image/*");
-
-            }
-        });
+    @Override
+    public void onDestroy() {
+        prefs.saveName(binding.etSave.getText().toString());
+        super.onDestroy();
     }
 }
