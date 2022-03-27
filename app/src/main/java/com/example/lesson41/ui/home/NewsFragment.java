@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.lesson41.App;
 import com.example.lesson41.R;
 import com.example.lesson41.databinding.FragmentNewsBinding;
 import com.example.lesson41.ui.interfaces.OnClickListener;
@@ -34,7 +35,6 @@ public class NewsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         news = (News) requireArguments().getSerializable("updateTask");
         if (news != null) binding.etNews.setText(news.getTitle());
 
@@ -55,6 +55,7 @@ public class NewsFragment extends Fragment {
         }
         if (news == null) {
             news = new News(text, System.currentTimeMillis());
+            App.getDatabase().newsDao().insert(news);
         } else {
             news.setTitle(text);
         }
@@ -62,6 +63,7 @@ public class NewsFragment extends Fragment {
         bundle.putSerializable("key", news);
         getParentFragmentManager().setFragmentResult("rk_news", bundle);
         close();
+
     }
 
     private void close() {

@@ -1,11 +1,30 @@
 package com.example.lesson41.ui.model;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.io.Serializable;
+
+@Entity
 
 public class News implements Serializable {
 
+
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
+
     private String title;
     private long createdAt;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
 
     public String getTitle() {
         return title;
