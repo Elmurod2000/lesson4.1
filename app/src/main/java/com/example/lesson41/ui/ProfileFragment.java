@@ -38,11 +38,11 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         prefs = new Prefs(view.getContext());
-        binding.ivForgallery.setOnClickListener(view1 ->
+        binding.ivProfil.setOnClickListener(view1 ->
                 resultLauncher.launch("image/*"));
-        binding.etSave.setText(prefs.getName());
+        binding.dataName.setText(prefs.getName());
         if(prefs.getImage()!=null){
-            Glide.with(binding.ivForgallery).load(prefs.getImage()).into(binding.ivForgallery);
+            Glide.with(binding.ivProfil).load(prefs.getImage()).into(binding.ivProfil);
         }
     }
 
@@ -51,14 +51,14 @@ public class ProfileFragment extends Fragment {
             new ActivityResultCallback<Uri>() {
                 @Override
                 public void onActivityResult(Uri result) {
-                    Glide.with(binding.ivForgallery).load(result).into(binding.ivForgallery);
+                    Glide.with(binding.ivProfil).load(result).into(binding.ivProfil);
                     prefs.saveImage(String.valueOf(result));
                 }
             });
 
     @Override
     public void onDestroy() {
-        prefs.saveName(binding.etSave.getText().toString());
+        prefs.saveName(binding.dataName.getText().toString());
         super.onDestroy();
     }
 }
