@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +20,19 @@ import com.example.lesson41.R;
 import com.example.lesson41.databinding.FragmentNewsBinding;
 import com.example.lesson41.ui.interfaces.OnClickListener;
 import com.example.lesson41.ui.model.News;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class NewsFragment extends Fragment {
-
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private News news;
     private FragmentNewsBinding binding;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -48,22 +56,38 @@ public class NewsFragment extends Fragment {
     }
 
     private void save() {
-        Bundle bundle = new Bundle();
         String text = binding.etNews.getText().toString().trim();
+        Bundle bundle = new Bundle();
         if (text.isEmpty()) {
             Toast.makeText(requireContext(), "type task!", Toast.LENGTH_SHORT).show();
         }
         if (news == null) {
             news = new News(text, System.currentTimeMillis());
+            bundle.putSerializable("key", news);
             App.getDatabase().newsDao().insert(news);
         } else {
             news.setTitle(text);
         }
-
-        bundle.putSerializable("key", news);
+        addToFireStore(news);
         getParentFragmentManager().setFragmentResult("rk_news", bundle);
-        close();
+    }
 
+    private void addToFireStore(News news) {
+        db.collection("news")
+                .add(news).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                close();
+                Toast.makeText(requireContext(), "Усешно", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(requireContext(), "Ошибка", Toast.LENGTH_SHORT).show();
+
+                Log.e("TAG", "onFailure: ", e);
+            }
+        });
     }
 
     private void close() {

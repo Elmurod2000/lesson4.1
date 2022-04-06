@@ -12,8 +12,6 @@ public class News implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
-
-
     private String title;
     private long createdAt;
 
@@ -45,5 +43,8 @@ public class News implements Serializable {
     public News(String title, long createdAt) {
         this.title = title;
         this.createdAt = createdAt;
+    }
+
+    public News() {
     }
 }
